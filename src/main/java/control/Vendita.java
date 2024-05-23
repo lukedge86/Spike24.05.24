@@ -46,6 +46,8 @@ public class Vendita extends HttpServlet {
 		product.setEmail((String) request.getSession().getAttribute("email"));
 		
 		 String UPLOAD_DIRECTORY = request.getServletContext().getRealPath("/")+"img/productIMG/";
+		 
+		 
 		    //process only if its multipart content
 		    if(ServletFileUpload.isMultipartContent(request)) {
 		        try {
@@ -53,6 +55,8 @@ public class Vendita extends HttpServlet {
 		                                     new DiskFileItemFactory()).parseRequest(new ServletRequestContext(request));
 
 		            for(FileItem item : multiparts){
+		            	
+		            	
 		                if(!item.isFormField()){
 		                    String name = new File(item.getName()).getName();
 		                    item.write( new File(UPLOAD_DIRECTORY + File.separator + name));
@@ -60,7 +64,16 @@ public class Vendita extends HttpServlet {
 		                }
 		                else {
 		                	if (item.getFieldName().compareTo("nome") == 0) {
+		                		if(item.getString().contains("<") || item.getString().contains("script") ) {
+				            		System.out.println("CVSS rilevato");
+				    			    request.getSession().setAttribute("refreshProduct", true);
+				    			    request.getRequestDispatcher("/index.jsp").forward(request, response);
+				    			    
+				    			 return;   
+				            	}
 		                		product.setNome(item.getString());
+		                		
+		                
 		                	}
 		                	else if (item.getFieldName().compareTo("prezzo") == 0) {
 		                		product.setPrezzo(Double.parseDouble(item.getString()));
@@ -69,12 +82,34 @@ public class Vendita extends HttpServlet {
 		                		product.setSpedizione(Double.parseDouble(item.getString()));
 		                	}
 		                	else if (item.getFieldName().compareTo("tipologia") == 0) {
+		                		
+		                		if(item.getString().contains("<") || item.getString().contains("script") ) {
+				            		System.out.println("CVSS rilevato");
+				    			    request.getSession().setAttribute("refreshProduct", true);
+				    			    request.getRequestDispatcher("/index.jsp").forward(request, response);
+				    			    
+				    			 return;   
+				            	}
 		                		product.setTipologia(item.getString());
 		                	}
 							else if (item.getFieldName().compareTo("tag") == 0) {
+								if(item.getString().contains("<") || item.getString().contains("script") ) {
+				            		System.out.println("CVSS rilevato");
+				    			    request.getSession().setAttribute("refreshProduct", true);
+				    			    request.getRequestDispatcher("/index.jsp").forward(request, response);
+				    			    
+				    			 return;   
+				            	}
 								product.setTag(item.getString());
 							}
 							else if (item.getFieldName().compareTo("descrizione") == 0) {
+								if(item.getString().contains("<") || item.getString().contains("script") ) {
+				            		System.out.println("CVSS rilevato");
+				    			    request.getSession().setAttribute("refreshProduct", true);
+				    			    request.getRequestDispatcher("/index.jsp").forward(request, response);
+				    			    
+				    			 return;   
+				            	}
 		                		product.setDescrizione(item.getString());
 		                	}
 		                }
